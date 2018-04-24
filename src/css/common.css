@@ -1,0 +1,159 @@
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    min-width: 800px;
+    min-height: 600px;
+}
+
+#board {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    z-index: 1;
+}
+
+.postit {
+    position: relative;
+    box-sizing: border-box;
+    background: yellow;
+    margin-right: 2px;
+    width: 250px;
+    height: 15px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    z-index: 9;
+    float: left;
+}
+
+.postit.expand {
+    height: 200px;
+}
+
+.postit .header {
+    top: 0;
+    height: 15px;
+    cursor: move;
+    z-index: 10;
+}
+
+.postit .header span {
+    display: inline-block;
+    margin: 0 3px;
+    height: 15px;
+    line-height: 15px;
+    float: right;
+    cursor: pointer;
+}
+
+.postit .header span.title {
+    font-size: 12px;
+    float: left;
+    width: 70%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+    overflow: hidden;
+}
+
+.postit.expand .header span.title {
+    display: none;
+}
+
+.postit .header span.caret {
+    width: 0;
+    height: 0px;
+    margin-top: 5px;
+    border-bottom: 4px dashed;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+    cursor: pointer;
+}
+
+.postit.expand .header span.caret {
+    border-top: 4px dashed;
+    border-bottom: 0px;
+}
+
+.postit .content {
+    display: none;
+    height: 86%;
+    width: 95%;
+    min-height: 15px;
+}
+
+.postit.expand .content {
+    display: block;
+}
+
+.postit .content textarea {
+    padding: 5px;
+    color: #333;
+    font-size: 12px;
+    word-break: break-all;
+    width: 100%;
+    background: transparent;
+    outline: 0px;
+    border: 0px;
+    height: 100%;
+    resize: none;
+    overflow: auto;
+}
+
+.postit .resizeable {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    width: 100%;
+    height: 10px;
+    cursor: s-resize;
+}
+
+.context-menu {
+    position: relative;
+}
+
+#postit-context, #board-context {
+    display: none;
+    position: fixed;
+    border: 1px solid #B2B2B2;
+    width: 150px;
+    background: #F9F9F9;
+    box-shadow: 3px 3px 2px #E9E9E9;
+    border-radius: 4px;
+    z-index: 999;
+}
+
+#postit-context {
+    width: 190px;
+}
+
+#postit-context li, #board-context li {
+    height: 21px;
+    padding: 3px;
+    padding-left: 10px;
+}
+
+.items {
+    list-style: none;
+    margin: 0px;
+    margin-top: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 3px;
+    font-size: 14px;
+    color: #333333;
+
+}
+
+hr {
+    width: 85%;
+    background-color: #E4E4E4;
+    border-color: #E4E4E4;
+    color: #E4E4E4;
+}
+
+.items :hover {
+    background: #ffffff;
+    border-radius: 2px;
+}
