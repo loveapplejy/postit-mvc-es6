@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "webpack --env build",
     "start": "webpack-dev-server --open --progress"
   },
   "author": "loveapple",

@@ -4,6 +4,7 @@ body {
     overflow: hidden;
     min-width: 800px;
     min-height: 600px;
+    background: #141154;
 }
 
 #board {
@@ -16,14 +17,17 @@ body {
 .postit {
     position: relative;
     box-sizing: border-box;
-    background: yellow;
-    margin-right: 2px;
+    background: #ff9690;
+    margin: 1px;
     width: 250px;
-    height: 15px;
-    border: 1px solid #ccc;
+    height: 20px;
+    border: 1px solid #777;
     resize: vertical;
     z-index: 9;
     float: left;
+    touch-action: none;
+    cursor: move;
+    transition-timing-function: ease-in;
 }
 
 .postit.expand {
@@ -32,16 +36,16 @@ body {
 
 .postit .header {
     top: 0;
-    height: 15px;
-    cursor: move;
+    height: 20px;
     z-index: 10;
+    /*border-bottom: 1px solid #777;*/
 }
 
 .postit .header span {
     display: inline-block;
     margin: 0 3px;
-    height: 15px;
-    line-height: 15px;
+    height: 20px;
+    line-height: 20px;
     float: right;
     cursor: pointer;
 }
@@ -60,18 +64,22 @@ body {
     display: none;
 }
 
+.postit.expand.showTitle .header span.title {
+    display: block;
+}
+
 .postit .header span.caret {
     width: 0;
     height: 0px;
-    margin-top: 5px;
-    border-bottom: 4px dashed;
+    margin-top: 6px;
+    border-bottom: 5px dashed;
     border-right: 4px solid transparent;
     border-left: 4px solid transparent;
     cursor: pointer;
 }
 
 .postit.expand .header span.caret {
-    border-top: 4px dashed;
+    border-top: 5px dashed;
     border-bottom: 0px;
 }
 

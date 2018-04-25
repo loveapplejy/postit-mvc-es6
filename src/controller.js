@@ -23,9 +23,9 @@ export default class Controller {
     this.store.insert({
       id: Date.now(),
       content: '',
-      background: 'yellow',
+      background: '#ff9690',
       fontSize: '12px',
-      color: 'black',
+      color: '#333',
       expand: true,
       translate: 'translate(0px, 0px)'
     }, this.view.showPostit.bind(this.view));

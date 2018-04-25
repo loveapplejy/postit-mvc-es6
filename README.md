@@ -1,9 +1,16 @@
-# Post-it App
+# Vanilla JavaScript Post-it App
 
-## Dev
+
+## Dev :)
 
 http://localhost:8080
 
 ```
 npm start
+```
+
+## Build :)
+
+```
+npm build
 ```

@@ -6,13 +6,15 @@ export default class Store {
     let list;
 
     let sample = [{
-      id: Date.now(),
-      content: '메모 하십시오!',
-      background: 'yellow',
-      fontSize: '12px',
-      color: 'black',
-      expand: true,
-      translate: 'translate(0px, 0px)'
+        id: Date.now(),
+        content: '메모를 하십시오!',
+        background: '#ff9690',
+        fontSize: '12px',
+        color: 'black',
+        expand: true,
+        translate: 'translate(0px, 0px)',
+        headerTitle: '헤더를 이용하여 드래그 가능합니다',
+        isSample: true
     }];
 
     this.getLocalStorage = () => {
@@ -29,7 +31,8 @@ export default class Store {
     };
 
     this.getLocalStorage();
-    if (!list.length) {
+
+    if (list && !list.length) {
       this.setLocalStorage(sample);
     }
   }

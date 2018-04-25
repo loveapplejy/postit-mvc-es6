@@ -39,46 +39,57 @@ export default class View {
     let postit = document.createElement('div');
     postit.className = 'postit expand';
     postit.dataset.id = item.id;
+    postit.draggable = true;
     postit.innerHTML = template;
 
     this.board.appendChild(postit);
   }
 
   bindMove(handler) {
-    let dragging = false, previousmouse;
+    const board = this.board;
+    let dragging = false, previousmouse, target, dragTarget;
 
-    window.onmousedown = function (e) {
+
+    board.onmousedown = function (e) {
       dragging = true;
       previousmouse = {x: e.pageX, y: e.pageY};
     }
 
-    window.onmouseup = function () {
+    board.onmouseup = function () {
       dragging = false;
+      dragTarget = 0;
     }
 
-    window.ondragstart = function (e) {
+    board.ondragstart = function (e) {
       e.preventDefault();
     }
 
-    window.onmousemove = function (e) {
-      let target = e.target;
+    board.onmousemove = function (e) {
+      target = e.target;
 
       if (dragging && target.offsetParent && target.offsetParent.matches('.postit')) {
         let currentPostit = getCurrentPostIt(target);
         let translate = '';
 
-        target = target.offsetParent;
-        target.x = !target.x ? 0 : target.x;
+        if(dragTarget && (dragTarget !== target.offsetParent)) {
+          return;
+        }
 
-        target.y = !target.y ? 0 : target.y;
-        target.x += e.pageX - previousmouse.x;
-        target.y += e.pageY - previousmouse.y;
+        dragTarget = target.offsetParent;
 
-        translate = 'translate(' + target.x + 'px, ' + target.y + 'px)';
+        // console.log('dragTarget.x ', dragTarget.x )
+        dragTarget.x = !dragTarget.x ? 0 : dragTarget.x;
 
-        target.style.transform = translate;
+        dragTarget.y = !dragTarget.y ? 0 : dragTarget.y;
+        dragTarget.x += e.pageX - previousmouse.x;
+        dragTarget.y += e.pageY - previousmouse.y;
+
+        translate = 'translate(' + dragTarget.x + 'px, ' + dragTarget.y + 'px)';
+
+        dragTarget.style.transform = translate;
 
         previousmouse = {x: e.pageX, y: e.pageY};
+
         handler(currentPostit.id, {translate: translate})
       }
     }
