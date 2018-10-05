@@ -48,7 +48,7 @@ export default class Template {
   }
 
   list(items) {
-    return items.reduce((prev, item) => {
+    return items ? items.reduce((prev, item) => {
 
       let template = this.defaultTemplate;
 
@@ -61,7 +61,7 @@ export default class Template {
 <div class="postit ${item.expand ? 'expand' : ''} ${item.isSample ? 'showTitle' : ''}" draggable="true" style="background:${item.background}; transform: ${item.translate}" data-id="${item.id}"> 
 ${template}
 </div>`;
-    }, '');
+    }, '') : '';
   }
 
   postit(item) {

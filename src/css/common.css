@@ -4,7 +4,7 @@ body {
     overflow: hidden;
     min-width: 800px;
     min-height: 600px;
-    background: #141154;
+    background: #004a4a;
 }
 
 #board {
@@ -20,14 +20,15 @@ body {
     background: #ff9690;
     margin: 1px;
     width: 250px;
-    height: 20px;
+    height: 25px;
     border: 1px solid #777;
     resize: vertical;
     z-index: 9;
     float: left;
     touch-action: none;
     cursor: move;
-    transition-timing-function: ease-in;
+    transition-timing-function: linear;
+    transition-duration: 0.2s;
 }
 
 .postit.expand {
@@ -36,24 +37,26 @@ body {
 
 .postit .header {
     top: 0;
-    height: 20px;
+    height: 25px;
     z-index: 10;
     /*border-bottom: 1px solid #777;*/
 }
 
 .postit .header span {
     display: inline-block;
-    margin: 0 3px;
-    height: 20px;
-    line-height: 20px;
+    margin: 0 5px;
+    /*height: 25px;*/
+    /*line-height: 25px;*/
     float: right;
     cursor: pointer;
 }
 
 .postit .header span.title {
+    width: 70%;
+    height: 25px;
+    line-height: 25px;
     font-size: 12px;
     float: left;
-    width: 70%;
     text-overflow: ellipsis;
     white-space: nowrap;
     word-wrap: normal;
@@ -68,26 +71,29 @@ body {
     display: block;
 }
 
+.postit .header span.remove {
+    font-size: 17px;
+    margin-top: 3px;
+}
+
 .postit .header span.caret {
-    width: 0;
-    height: 0px;
-    margin-top: 6px;
-    border-bottom: 5px dashed;
+    margin-top: 7px;
+    border-bottom: 7px dashed;
     border-right: 4px solid transparent;
     border-left: 4px solid transparent;
     cursor: pointer;
 }
 
 .postit.expand .header span.caret {
-    border-top: 5px dashed;
+    border-top: 8px dashed;
     border-bottom: 0px;
 }
 
 .postit .content {
     display: none;
     height: 86%;
-    width: 95%;
     min-height: 15px;
+    padding: 0 5px;
 }
 
 .postit.expand .content {
@@ -95,7 +101,7 @@ body {
 }
 
 .postit .content textarea {
-    padding: 5px;
+    padding: 0;
     color: #333;
     font-size: 12px;
     word-break: break-all;
@@ -126,8 +132,8 @@ body {
     position: fixed;
     border: 1px solid #B2B2B2;
     width: 150px;
-    background: #F9F9F9;
-    box-shadow: 3px 3px 2px #E9E9E9;
+    background: #ffffff;
+    /*box-shadow: 3px 3px 2px #E9E9E9;*/
     border-radius: 4px;
     z-index: 999;
 }
@@ -138,6 +144,7 @@ body {
 
 #postit-context li, #board-context li {
     height: 21px;
+    line-height: 21px;
     padding: 3px;
     padding-left: 10px;
 }
@@ -161,7 +168,7 @@ hr {
     color: #E4E4E4;
 }
 
-.items :hover {
-    background: #ffffff;
-    border-radius: 2px;
-}
+/*.items :hover {*/
+    /*background: #ffffff;*/
+    /*border-radius: 2px;*/
+/*}*/

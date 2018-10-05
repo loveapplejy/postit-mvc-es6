@@ -1,40 +1,34 @@
+const sample = [{
+  id: `id_${Date.now()}`,
+  content: '메모를 하십시오!',
+  background: '#ff9690',
+  fontSize: '12px',
+  color: 'black',
+  expand: true,
+  translate: 'translate(0px, 0px)',
+  headerTitle: '헤더를 이용하여 드래그 가능합니다',
+  isSample: true
+}];
+
 export default class Store {
-  constructor(name, callback) {
-    const localStorage = window.localStorage;
+  constructor(name) {
+    this.localStorage = window.localStorage;
+    this.storageName = name;
+  }
 
-    // post-it list
-    let list;
+  getLocalStorage() {
+    let list = JSON.parse(this.localStorage.getItem(this.storageName));
 
-    let sample = [{
-        id: Date.now(),
-        content: '메모를 하십시오!',
-        background: '#ff9690',
-        fontSize: '12px',
-        color: 'black',
-        expand: true,
-        translate: 'translate(0px, 0px)',
-        headerTitle: '헤더를 이용하여 드래그 가능합니다',
-        isSample: true
-    }];
-
-    this.getLocalStorage = () => {
-      if (!list) {
-        list = JSON.parse(localStorage.getItem(name));
-      }
-
-      return list;
-    };
-
-
-    this.setLocalStorage = (data) => {
-      localStorage.setItem(name, JSON.stringify(list = data));
-    };
-
-    this.getLocalStorage();
-
-    if (list && !list.length) {
+    if (!list.length) {
       this.setLocalStorage(sample);
+      list = JSON.parse(this.localStorage.getItem(this.storageName));
     }
+
+    return list;
+  }
+
+  setLocalStorage(data) {
+    this.localStorage.setItem(this.storageName, JSON.stringify(data));
   }
 
   find(id) {
@@ -46,7 +40,7 @@ export default class Store {
   }
 
   insert(data, callback) {
-    const list = this.getLocalStorage();
+    const list = this.getLocalStorage() || [];
     list.push(data);
 
     this.setLocalStorage(list);

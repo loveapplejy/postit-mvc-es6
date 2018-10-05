@@ -1,8 +1,10 @@
 const getCurrentPostIt = (target) => {
-  const id = parseInt(target.offsetParent.dataset.id);
-  const expand = target.offsetParent.classList.value.indexOf('expand') > 0;
+  const currentTarget = target.classList.contains('postit') ? target : target.offsetParent;
 
-  return {id, expand};
+  const id = currentTarget.dataset.id;
+  const expand = currentTarget.classList.value.indexOf('expand') > 0;
+
+  return { id, expand };
 }
 
 export default class View {
@@ -15,8 +17,22 @@ export default class View {
     this.newPostit = document.querySelector('.new-postit');
     this.orderPostit = document.querySelector('.order-postit');
     this.clearAll = document.querySelector('.clear-all');
+  }
 
-    this.bindContextEvent();
+  renderPostitList(items) {
+    this.board.innerHTML = this.template.list(items);
+  }
+
+  renderPostit(item) {
+    let template = this.template.postit(item);
+    let postit = document.createElement('div');
+
+    postit.className = 'postit expand';
+    postit.dataset.id = item.id;
+    postit.draggable = true;
+    postit.innerHTML = template;
+
+    this.board.appendChild(postit);
   }
 
   hideContextMenu() {
@@ -30,116 +46,74 @@ export default class View {
     el.style.display = 'block';
   }
 
-  showPostitList(items) {
-    this.board.innerHTML = this.template.list(items);
-  }
-
-  showPostit(item) {
-    let template = this.template.postit(item);
-    let postit = document.createElement('div');
-    postit.className = 'postit expand';
-    postit.dataset.id = item.id;
-    postit.draggable = true;
-    postit.innerHTML = template;
-
-    this.board.appendChild(postit);
-  }
-
   bindMove(handler) {
     const board = this.board;
-    let dragging = false, previousmouse, target, dragTarget;
+    let dragging, currentTarget, previousPosition, dragTarget;
 
+    board.addEventListener('dragstart', function(e) {
+      currentTarget = e.target;
 
-    board.onmousedown = function (e) {
-      dragging = true;
-      previousmouse = {x: e.pageX, y: e.pageY};
-    }
+      if (currentTarget.draggable) {
+        dragging = currentTarget.draggable;
+        previousPosition = {x: e.pageX, y: e.pageY};
+      }
+    });
 
-    board.onmouseup = function () {
-      dragging = false;
-      dragTarget = 0;
-    }
+    board.addEventListener('dragend', function(e) {
+      if (dragging) {
+        let currentPostit = getCurrentPostIt(currentTarget);
+        let translate;
 
-    board.ondragstart = function (e) {
-      e.preventDefault();
-    }
-
-    board.onmousemove = function (e) {
-      target = e.target;
-
-      if (dragging && target.offsetParent && target.offsetParent.matches('.postit')) {
-        let currentPostit = getCurrentPostIt(target);
-        let translate = '';
-
-        if(dragTarget && (dragTarget !== target.offsetParent)) {
-          return;
-        }
-
-        dragTarget = target.offsetParent;
-
-        // console.log('dragTarget.x ', dragTarget.x )
+        dragTarget = currentTarget;
         dragTarget.x = !dragTarget.x ? 0 : dragTarget.x;
-
         dragTarget.y = !dragTarget.y ? 0 : dragTarget.y;
-        dragTarget.x += e.pageX - previousmouse.x;
-        dragTarget.y += e.pageY - previousmouse.y;
+        dragTarget.x += e.pageX - previousPosition.x;
+        dragTarget.y += e.pageY - previousPosition.y;
 
-        translate = 'translate(' + dragTarget.x + 'px, ' + dragTarget.y + 'px)';
-
+        translate = `translate(${dragTarget.x}px, ${dragTarget.y}px)`;
         dragTarget.style.transform = translate;
 
-        previousmouse = {x: e.pageX, y: e.pageY};
+        previousPosition = { x: e.pageX, y: e.pageY };
 
-        handler(currentPostit.id, {translate: translate})
+        handler(currentPostit.id, { translate })
       }
-    }
+    });
   }
 
-  bindContextEvent() {
+  bindContextEvent(handler) {
     this.board.addEventListener('contextmenu', (e) => {
       e.preventDefault();
+
       const {target} = e;
 
-      if (target && target.id === 'board') {
+      if (target) {
         this.hideContextMenu();
 
-        const pageX = e.pageX;
-        const pageY = e.pageY;
+        if (target.id && target.id === 'board') {
+          const pageX = e.pageX;
+          const pageY = e.pageY;
 
-        this.showContextMenu(this.boardContext, pageX, pageY);
+          this.showContextMenu(this.boardContext, pageX, pageY);
+        } else {
+          const pageX = e.pageX;
+          const pageY = e.pageY;
+
+          let currentPostit = getCurrentPostIt(target);
+
+          let show = (item) => {
+            this.postitContext.innerHTML = this.template.contextMenu(item);
+            this.showContextMenu(this.postitContext, pageX, pageY);
+          }
+
+          handler(currentPostit.id, show, 'expand');
+        }
       }
     });
 
     this.board.addEventListener('click', (e) => {
       e.preventDefault();
-      const target = e.target;
 
       this.hideContextMenu();
-    })
-  }
-
-  bindPostitContextEvent(handler) {
-    this.board.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-
-      const {target} = e;
-
-      if (target && target.id !== 'board') {
-        this.hideContextMenu();
-
-        const pageX = e.pageX;
-        const pageY = e.pageY;
-
-        let currentPostit = getCurrentPostIt(target);
-
-        let show = (item) => {
-          this.postitContext.innerHTML = this.template.contextMenu(item);
-          this.showContextMenu(this.postitContext, pageX, pageY);
-
-        }
-
-        handler(currentPostit.id, show, 'expand');
-      }
     });
   }
 
@@ -168,7 +142,7 @@ export default class View {
     this.board.addEventListener('click', (e) => {
       e.preventDefault();
 
-      const {target} = e;
+      const { target } = e;
 
       if (target && target.matches('.remove')) {
         handler(getCurrentPostIt(target).id);
@@ -178,7 +152,7 @@ export default class View {
 
   bindEditPostit(handler) {
     this.board.addEventListener('focusout', (e) => {
-      const {target} = e;
+      const { target } = e;
 
       if (target && target.matches('textarea')) {
         handler(getCurrentPostIt(target).id, {content: target.value}, true);
@@ -199,10 +173,10 @@ export default class View {
   bindContextMenu(handler) {
     const hide = () => {
       this.hideContextMenu();
-    }
+    };
 
     this.postitContext.addEventListener('click', e => {
-      const {target} = e;
+      const { target } = e;
       const currentPostIt = getCurrentPostIt(target);
 
       if (target.matches('.expand')) {
@@ -213,10 +187,10 @@ export default class View {
         handler(currentPostIt.id, hide, 'order');
       }
 
-    })
+    });
 
     this.postitContext.addEventListener('change', e => {
-      const {target} = e;
+      const { target } = e;
       const currentPostIt = getCurrentPostIt(target);
 
       if (target.matches('.background')) {
@@ -232,8 +206,8 @@ export default class View {
 
         handler(currentPostIt.id, '', 'edit-color', color);
       }
+    });
 
-    })
   }
 
 }
